@@ -32,5 +32,8 @@ line-length = 88
 line-length = 88
 target-version = "py311"
 
+[tool.ruff.lint]
+select = ["E", "F", "T201"]
+
 [tool.pytest.ini_options]
 addopts = "-q"

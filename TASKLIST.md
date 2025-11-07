@@ -3,12 +3,12 @@
 > Sigue este checklist en orden. Marca cada casilla al completar.
 
 ## M0 — Scaffold & Calidad
-- [ ] Inicializa repo y entorno
+- [ x ] Inicializa repo y entorno
   - [ ] Crea `pyproject.toml`, `Dockerfile`, `docker-compose.yml`, `.env.example`.
-  - [ ] Instala dependencias (fastapi, uvicorn, sqlalchemy, pydantic, jose, passlib, pymysql, pytest, ruff, black, pre-commit).
-  - [ ] Añade `pre-commit-config.yaml` y ejecuta `pre-commit install`.
-- [ ] Crea estructura `app/` con `main.py` minimal y `/health`.
-- [ ] Añade `tests/test_smoke.py` y verifica:
+  - [ x ] Instala dependencias (fastapi, uvicorn, sqlalchemy, pydantic, jose, passlib, pymysql, pytest, ruff, black, pre-commit).
+  - [ x ] Añade `pre-commit-config.yaml` y ejecuta `pre-commit install`.
+- [ x ] Crea estructura `app/` con `main.py` minimal y `/health`.
+- [ x ] Añade `tests/test_smoke.py` y verifica:
   ```bash
   pytest -q
   ```
