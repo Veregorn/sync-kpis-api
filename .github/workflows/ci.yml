@@ -25,9 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install fastapi "uvicorn[standard]" "sqlalchemy>=2.0" "pydantic>=2" \
-            "python-jose[cryptography]" "passlib[bcrypt]" pymysql \
-            pytest ruff black
+          pip install -e ".[dev]"
 
       - name: Lint (ruff)
         run: ruff check .
