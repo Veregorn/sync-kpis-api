@@ -1,8 +1,19 @@
+# Virtual envs
 .venv
 .env
 *.env
+
+# LLM CLIs
 CLAUDE.md
 AGENTS.md
 
 # metadata de builds locales
 *.egg-info/
+dist/
+build/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyc

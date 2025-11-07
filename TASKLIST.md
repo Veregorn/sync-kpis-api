@@ -4,7 +4,7 @@
 
 ## M0 — Scaffold & Calidad
 - [ x ] Inicializa repo y entorno
-  - [ ] Crea `pyproject.toml`, `Dockerfile`, `docker-compose.yml`, `.env.example`.
+  - [ x ] Crea `pyproject.toml`, `Dockerfile`, `docker-compose.yml`, `.env.example`.
   - [ x ] Instala dependencias (fastapi, uvicorn, sqlalchemy, pydantic, jose, passlib, pymysql, pytest, ruff, black, pre-commit).
   - [ x ] Añade `pre-commit-config.yaml` y ejecuta `pre-commit install`.
 - [ x ] Crea estructura `app/` con `main.py` minimal y `/health`.
@@ -17,14 +17,14 @@
   docker compose up -d --build
   open http://localhost:8000/docs
   ```
-- [ ] Commit: `chore(scaffold): fastapi skeleton + docker + pre-commit`
+- [ x ] Commit: `chore(scaffold): fastapi skeleton + docker + pre-commit`
 
 ## M1 — Auth & Tenancy
-- [ ] Modelos `User`, `Shop` en `models.py`.
-- [ ] Utilidades de seguridad (`hash_password`, `verify_password`, `create_token`).
-- [ ] Endpoints `POST /auth/register` y `POST /auth/login`.
-- [ ] Dependencia `get_current_user` con `OAuth2PasswordBearer`.
-- [ ] Endpoint `POST /shops` (crea workspace). Proteger con JWT.
+- [ x ] Modelos `User`, `Shop` en `models.py`.
+- [ x ] Utilidades de seguridad (`hash_password`, `verify_password`, `create_token`).
+- [ x ] Endpoints `POST /auth/register` y `POST /auth/login`.
+- [ x ] Dependencia `get_current_user` con `OAuth2PasswordBearer`.
+- [ x ] Endpoint `POST /shops` (crea workspace). Proteger con JWT.
 - [ ] Probar con curl:
   ```bash
   # register
