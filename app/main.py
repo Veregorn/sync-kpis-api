@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from .routers import auth_router, shops_router
+from .routers import auth_router, shops_router, products_router, receipts_router
 from .database import Base, engine
 
 
@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI):
     # Shutdown (de momento nada)
 
 
-app = FastAPI(title="Sync KPIs API")
+app = FastAPI(title="Sync KPIs API", lifespan=lifespan)
 
 
 @app.get("/health")
@@ -23,3 +23,5 @@ def health() -> dict:
 
 app.include_router(auth_router.router)
 app.include_router(shops_router.router)
+app.include_router(products_router.router)
+app.include_router(receipts_router.router)

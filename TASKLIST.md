@@ -25,7 +25,7 @@
 - [ x ] Endpoints `POST /auth/register` y `POST /auth/login`.
 - [ x ] Dependencia `get_current_user` con `OAuth2PasswordBearer`.
 - [ x ] Endpoint `POST /shops` (crea workspace). Proteger con JWT.
-- [ ] Probar con curl:
+- [ x ] Probar con curl:
   ```bash
   # register
   curl -sX POST :8000/auth/register -H 'content-type: application/json' \
@@ -34,14 +34,14 @@
   # create shop
   curl -sX POST :8000/shops -H "authorization: Bearer $TOKEN" -d '{"name":"Demo"}' -H 'content-type: application/json'
   ```
-- [ ] Commit: `feat(auth): jwt login/register + shops`
+- [ x ] Commit: `feat(auth): jwt login/register + shops`
 
 ## M2 — Catálogo & Órdenes con Idempotencia
-- [ ] Modelos `Product`, `Receipt`, `ReceiptLine`, `IdemKey` con constraints.
-- [ ] `POST /products`.
-- [ ] `POST /shops/{shop_id}/receipts` con cálculo de total y guardado de líneas.
-- [ ] Idempotencia: si `Idempotency-Key` existe, devolver recibo previo.
-- [ ] Prueba rápida:
+- [ x ] Modelos `Product`, `Receipt`, `ReceiptLine`, `IdemKey` con constraints.
+- [ x ] `POST /products`.
+- [ x ] `POST /shops/{shop_id}/receipts` con cálculo de total y guardado de líneas.
+- [ x ] Idempotencia: si `Idempotency-Key` existe, devolver recibo previo.
+- [ x ] Prueba rápida:
   ```bash
   curl -sX POST :8000/products -H "authorization: Bearer $TOKEN" \
     -H 'content-type: application/json' -d '{"sku":"COCA-500","name":"Coca 500","price":1.2}'
@@ -53,7 +53,7 @@
 
   # Repite el mismo request y confirma el mismo receipt_id
   ```
-- [ ] Commit: `feat(orders): receipts with idempotency`
+- [ x ] Commit: `feat(orders): receipts with idempotency`
 
 ## M3 — KPIs
 - [ ] Consulta agregada: nº tickets, suma de total, top SKUs (join product/lines/receipts).
