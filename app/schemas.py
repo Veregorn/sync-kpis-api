@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
-from typing import List
+from typing import List, Optional
 
 
 # ---------- Auth ----------
@@ -65,3 +65,20 @@ class ReceiptOut(BaseModel):
     total: float
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# ---------- KPIs ----------
+
+
+class TopSku(BaseModel):
+    sku: str
+    name: Optional[str] = None
+    qty: int
+    revenue: float
+
+
+class KPIs(BaseModel):
+    shop_id: int
+    total_receipts: int
+    total_revenue: float
+    top_skus: List[TopSku]

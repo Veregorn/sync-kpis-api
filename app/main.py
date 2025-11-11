@@ -1,7 +1,13 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from .routers import auth_router, shops_router, products_router, receipts_router
+from .routers import (
+    auth_router,
+    shops_router,
+    products_router,
+    receipts_router,
+    kpis_router,
+)
 from .database import Base, engine
 
 
@@ -25,3 +31,4 @@ app.include_router(auth_router.router)
 app.include_router(shops_router.router)
 app.include_router(products_router.router)
 app.include_router(receipts_router.router)
+app.include_router(kpis_router.router)
