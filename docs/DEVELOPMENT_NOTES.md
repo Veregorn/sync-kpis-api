@@ -65,11 +65,11 @@
 - [ x ] Commit: `feat(kpis): basic metrics endpoints`
 
 ## M4 — Pulido & Docs
-- [ ] Etiquetas por router y descripciones en OpenAPI.
-- [ ] README final (quickstart, API, estructura, tests, licencia).
-- [ ] Añade GitHub Actions (lint + tests).
-- [ ] Revisa `pre-commit run --all-files` y `pytest -q`.
-- [ ] Commit: `docs(readme): usage & api`; `ci(actions): lint+tests`
+- [ x ] Etiquetas por router y descripciones en OpenAPI.
+- [ x ] README final (quickstart, API, estructura, tests, licencia).
+- [ x ] Añade GitHub Actions (lint + tests).
+- [ x ] Revisa `pre-commit run --all-files` y `pytest -q`.
+- [ x ] Commit: `docs(readme): usage & api`; `ci(actions): lint+tests`
 
 ## M5 — Extensiones (opcionales)
 - [ ] Sync incremental (`/devices/sync`) con `since` y `updated_at`.
