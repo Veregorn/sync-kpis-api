@@ -106,8 +106,22 @@ docker-compose.yml
 
 ## Running Locally
 
-1. Using SQLite (simple dev setup)
+1. Using Makefile (recommended)
 
+```bash
+python -m venv .venv
+source .venv/bin/activate
+
+cp .env.example .env
+# By default: DB_URL=sqlite:///./dev.db
+
+make install
+make dev
+```
+
+2. Using SQLite (simple dev setup)
+
+```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -115,26 +129,39 @@ pip install -e ".[dev]"
 cp .env.example .env  # DB_URL=sqlite:///./dev.db
 
 uvicorn app.main:app --reload
+```
 
 Open:
 	•	API docs: http://localhost:8000/docs
 	•	Health check: GET /health
 
 
-2. Using Docker + MySQL
+3. Using Docker + MySQL
 
+```bash
 cp .env.example .env
 # set DB_URL to:
 # mysql+pymysql://sync_kpis_user:sync_kpis_pass@db:3306/sync_kpis_db
 
 docker compose up -d --build
+```
 
 ---
 
-## Testing
+## Testing & Linting
 
+```bash
+# Run tests
+make test
+# or
 pytest -q
 
+# Lint only
+make lint
+
+# Auto-format & fix lintable issues
+make format
+```
 CI runs the same suite on each push/PR.
 
 ---
@@ -195,12 +222,13 @@ curl -sS -X GET "http://localhost:8000/shops/$SHOP_ID/kpis" \
 
 ## Notes
 
-This project is intentionally small and focused.
-	•	It aims to demonstrate:
+This project is intentionally small but opinionated.
+It aims to showcase:
 	•	clean API design,
-	•	proper auth & multitenancy,
-	•	idempotent write patterns,
-	•	SQL-based reporting / KPIs,
-	•	modern Python tooling.
+	•	JWT auth & multitenancy,
+	•	idempotency patterns,
+	•	SQL-based reporting,
+	•	modern Python tooling (FastAPI, SQLAlchemy 2, Pydantic v2),
+	•	and a CI-ready, Docker-ready setup suitable for technical screenings or as a starter kit.
 
 Feel free to fork and adapt it for real-world backends or technical screenings.
