@@ -37,7 +37,7 @@ def test_kpis_aggregates_receipts_and_top_skus():
 
     headers = {"Authorization": f"Bearer {token}"}
 
-    # Crear dos receipts
+    # Create two receipts
     r1 = client.post(
         f"/shops/{shop_id}/receipts",
         headers=headers,
@@ -52,7 +52,7 @@ def test_kpis_aggregates_receipts_and_top_skus():
     )
     assert r2.status_code == 201, r2.text
 
-    # Pedir KPIs
+    # Request KPIs
     rk = client.get(
         f"/shops/{shop_id}/kpis",
         headers=headers,
@@ -64,7 +64,7 @@ def test_kpis_aggregates_receipts_and_top_skus():
     assert data["total_receipts"] == 2
     assert abs(data["total_revenue"] - 3.4) < 1e-6
 
-    # Comprobamos que COCA-500 aparece en top_skus
+    # Check that COCA-500 appears in top_skus
     skus = {item["sku"]: item for item in data["top_skus"]}
     assert "COCA-500" in skus
     assert skus["COCA-500"]["qty"] == 2

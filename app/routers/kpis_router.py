@@ -35,7 +35,7 @@ def _parse_date(date_str: Optional[str]) -> Optional[datetime]:
     if not date_str:
         return None
     try:
-        # Interpretamos YYYY-MM-DD al inicio del día
+        # Interpret YYYY-MM-DD at the beginning of the day
         d = datetime.fromisoformat(date_str).date()
         return datetime.combine(d, time.min)
     except ValueError:
@@ -62,7 +62,7 @@ def get_kpis(
     start_dt = _parse_date(from_date)
     end_dt = _parse_date(to_date)
 
-    # Ajuste para incluir todo el día en 'to'
+    # Adjust to include the whole day in 'to'
     if end_dt is not None:
         end_dt = end_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 

@@ -8,7 +8,7 @@ client = TestClient(app)
 
 
 def test_register_login_and_create_shop() -> None:
-    # Email único para no chocar si el test se ejecuta varias veces
+    # Unique email to avoid collision if the test is executed multiple times
     email = f"test_{uuid4().hex[:8]}@example.com"
     password = "ChangeMe123"
 

@@ -54,7 +54,7 @@ def test_receipt_idempotency_same_key_returns_same_receipt() -> None:
         ]
     }
 
-    # Primera petición
+    # First request
     r1 = client.post(
         f"/shops/{shop_id}/receipts",
         headers=headers,
@@ -65,7 +65,7 @@ def test_receipt_idempotency_same_key_returns_same_receipt() -> None:
     assert "id" in data1
     assert data1["total"] == 2.4
 
-    # Segunda petición con misma Idempotency-Key y mismo body
+    # Second request with same Idempotency-Key and same body
     r2 = client.post(
         f"/shops/{shop_id}/receipts",
         headers=headers,
@@ -74,6 +74,6 @@ def test_receipt_idempotency_same_key_returns_same_receipt() -> None:
     assert r2.status_code == 201, r2.text
     data2 = r2.json()
 
-    # Debe devolver el mismo recibo (idempotencia)
+    # Should return the same receipt (idempotency)
     assert data2["id"] == data1["id"]
     assert data2["total"] == data1["total"]

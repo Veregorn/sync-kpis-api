@@ -56,13 +56,13 @@
 - [ x ] Commit: `feat(orders): receipts with idempotency`
 
 ## M3 — KPIs
-- [ ] Consulta agregada: nº tickets, suma de total, top SKUs (join product/lines/receipts).
-- [ ] `GET /shops/{shop_id}/kpis?from&to` (filtrado por `created_at` si está disponible).
-- [ ] Prueba:
+- [ x ] Consulta agregada: nº tickets, suma de total, top SKUs (join product/lines/receipts).
+- [ x ] `GET /shops/{shop_id}/kpis?from&to` (filtrado por `created_at` si está disponible).
+- [ x ] Prueba:
   ```bash
   curl -s :8000/shops/1/kpis
   ```
-- [ ] Commit: `feat(kpis): basic metrics endpoints`
+- [ x ] Commit: `feat(kpis): basic metrics endpoints`
 
 ## M4 — Pulido & Docs
 - [ ] Etiquetas por router y descripciones en OpenAPI.

@@ -49,7 +49,7 @@ def create_receipt(
     current_user: User = Depends(get_current_user),
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
 ):
-    # 1) Validar shop & propietario
+    # 1) Validate shop & owner
     _ensure_shop_owner(db, shop_id, current_user)
 
     # 2) Si hay Idempotency-Key, mirar si ya existe
@@ -60,7 +60,7 @@ def create_receipt(
             .first()
         )
         if existing and existing.receipt_id is not None:
-            # Recuperar el receipt asociado y devolverlo
+            # Recover the associated receipt and return it
             receipt = (
                 db.query(Receipt).filter(Receipt.id == existing.receipt_id).first()
             )
@@ -70,7 +70,7 @@ def create_receipt(
                     total=float(receipt.total),
                 )
 
-    # 3) Crear / asegurar productos + calcular total
+    # 3) Create / ensure products + calculate total
     total = 0.0
     lines_models: list[ReceiptLine] = []
 
@@ -83,14 +83,14 @@ def create_receipt(
 
         product = db.query(Product).filter(Product.sku == line.sku).first()
         if not product:
-            # Si no existe, lo creamos on-the-fly con el SKU como nombre
+            # If not exists, create it on-the-fly with the SKU as name
             product = Product(
                 sku=line.sku,
                 name=line.sku,
                 price=line.unit_price,
             )
             db.add(product)
-            db.flush()  # obtener product.id
+            db.flush()  # get product.id
 
         line_total = line.qty * line.unit_price
         total += line_total
@@ -103,16 +103,16 @@ def create_receipt(
             )
         )
 
-    # 4) Crear receipt + lines en una transacción
+    # 4) Create receipt + lines in a transaction
     receipt = Receipt(shop_id=shop_id, total=total)
     db.add(receipt)
-    db.flush()  # obtener receipt.id
+    db.flush()  # get receipt.id
 
     for lm in lines_models:
         lm.receipt_id = receipt.id
         db.add(lm)
 
-    # 5) Guardar Idempotency-Key si aplica
+    # 5) Save Idempotency-Key if applies
     if idempotency_key:
         idem = IdempotencyKey(
             key=idempotency_key,

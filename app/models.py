@@ -74,7 +74,7 @@ class ReceiptLine(Base):
     unit_price: Mapped[float] = mapped_column(Numeric(10, 2))
 
     receipt: Mapped["Receipt"] = relationship(back_populates="lines")
-    # Opcionalmente: product: Mapped["Product"] = relationship()
+    # Optional: product: Mapped["Product"] = relationship()
 
 
 class IdempotencyKey(Base):

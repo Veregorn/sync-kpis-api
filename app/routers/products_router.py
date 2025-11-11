@@ -18,7 +18,7 @@ def create_product(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    # Para el MVP no limitamos por usuario: catálogo global.
+    # For the MVP we don't limit by user: global catalog.
     existing = db.query(Product).filter(Product.sku == product_in.sku).first()
     if existing:
         return existing

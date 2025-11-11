@@ -1,30 +1,90 @@
-# Sync KPIs API (FastAPI + SQL)
+# Sync KPIs API
 
-Backend genérico para apps que generan **órdenes** (ventas/pedidos/reservas) y necesitan **autenticación**, **almacenamiento SQL** e **indicadores de negocio (KPIs)**. Útil como plantilla de backend serio para side‑projects, PoCs o pequeños productos (kioskos, e‑commerce ligero, clubs, ferias, food‑trucks, etc.).
+A small but production-oriented backend template built with **FastAPI** and **SQLAlchemy**.
 
-## Características (MVP)
-- Auth **JWT** (registro / login).
-- Modelo multi‑tenant con **workspaces/shops**.
-- **Catálogo** de items/productos.
-- **Órdenes** con líneas + **idempotencia** (cabecera `Idempotency-Key`).
-- **KPIs** por workspace: Nº de órdenes, revenue, top SKUs.
-- **OpenAPI** docs, **tests**, **pre‑commit** (Black+Ruff), **Docker Compose** con MySQL. (Soporta SQLite para desarrollo rápido).
+The goal is to support applications that:
 
-## Stack
-- **Python 3.12**, **FastAPI**, **SQLAlchemy 2.x**, **Pydantic v2**.
-- **MySQL 8** (o **SQLite** en local), **uvicorn**.
-- Calidad: **pytest**, **ruff**, **black**, pre‑commit hooks.
+- manage **shops/workspaces**,
+- store **orders/receipts** in a relational database,
+- expose **business KPIs** (revenue, top SKUs, etc.),
+- need **JWT authentication**, **multitenancy**, and **idempotent writes**.
 
-## Estructura
-```
+It is intentionally generic: suitable for kiosks, small POS systems, light e-commerce, events, fairs, food trucks, etc.
+
+---
+
+## Features
+
+**Authentication & Tenancy**
+
+- User registration & login via **JWT**.
+- `OAuth2PasswordBearer` for protected endpoints.
+- Each user owns one or more **shops**.
+- All write operations are scoped to the authenticated owner.
+
+**Catalog & Orders**
+
+- `Product` model with SKU, name, price.
+- `Receipt` + `ReceiptLine` to persist sales.
+- On-the-fly product creation from incoming lines (for simple integrations).
+
+**Idempotent Receipt Creation**
+
+- `POST /shops/{shop_id}/receipts` accepts `Idempotency-Key` header.
+- Same key + same payload → returns the **same receipt**, does not duplicate.
+- Useful for flaky networks, mobile clients, or retrying integrations.
+
+**KPIs**
+
+- `GET /shops/{shop_id}/kpis`:
+  - total number of receipts,
+  - total revenue,
+  - top SKUs (quantity & revenue),
+  - optional date range filter.
+
+**Quality & Tooling**
+
+- **FastAPI** + **Pydantic v2**.
+- **SQLAlchemy 2.x** ORM style.
+- `pytest` for integration-style tests:
+  - smoke test,
+  - auth flow (register → login → create shop),
+  - idempotent receipts,
+  - KPIs aggregation.
+- **pre-commit** with:
+  - `black`,
+  - `ruff`,
+  - `debug-statements` (no `pdb` / debug trash).
+- **GitHub Actions**:
+  - install from `pyproject.toml`,
+  - lint + format check + tests on each push/PR.
+
+---
+
+## Tech Stack
+
+- Python **3.11+**
+- **FastAPI**
+- **SQLAlchemy 2.x**
+- **Pydantic v2** (`pydantic[email]`)
+- **PyMySQL** (MySQL) or SQLite for local dev
+- **python-jose**, **passlib[bcrypt]** for JWT & password hashing
+- **Uvicorn** as ASGI server
+- **pytest**, **ruff**, **black**, **pre-commit**
+
+---
+
+## Project Structure
+
 app/
-  main.py           # Enrutado principal
-  deps.py           # Dependencias (DB, auth)
-  database.py       # Engine + session + Base
-  models.py         # SQLAlchemy models
-  schemas.py        # Pydantic schemas
-  crud.py           # Capa de acceso/consultas
-  routers/          # Routers por dominio
+  main.py            # FastAPI app + router wiring
+  database.py        # SQLAlchemy engine/session/Base
+  models.py          # ORM models (User, Shop, Product, Receipt, ... )
+  schemas.py         # Pydantic models (request/response)
+  deps.py            # DB session & current_user dependencies
+  utils/
+    security.py      # Password hashing & JWT helpers
+  routers/
     auth_router.py
     shops_router.py
     products_router.py
@@ -32,43 +92,61 @@ app/
     kpis_router.py
 tests/
   test_smoke.py
+  test_auth_flow.py
+  test_receipts_idempotency.py
+  test_kpis.py
+.github/
+  workflows/ci.yml   # lint + tests
+pyproject.toml
 Dockerfile
 docker-compose.yml
-pyproject.toml
-pre-commit-config.yaml
 .env.example
-```
 
-## Puesta en marcha
-### Opción 1: Docker (recomendada)
-```bash
-docker compose up -d --build
-# Docs
-open http://localhost:8000/docs
-```
+---
 
-### Opción 2: Local (SQLite)
-```bash
+## Running Locally
+
+1. Using SQLite (simple dev setup)
+
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt  # o usa pyproject con pipx/pip
-export DB_URL=sqlite:///./dev.db
+pip install -e ".[dev]"
+
+cp .env.example .env  # DB_URL=sqlite:///./dev.db
+
 uvicorn app.main:app --reload
-```
 
-## API (MVP)
-- `POST /auth/register` → Token.
-- `POST /auth/login` → Token.
-- `POST /shops` → Crea workspace/tienda.
-- `POST /products` → Alta de producto.
-- `POST /shops/{shop_id}/receipts` → Crea orden con líneas (**Idempotency-Key** opcional).
-- `GET  /shops/{shop_id}/kpis?from=YYYY-MM-DD&to=YYYY-MM-DD` → Métricas básicas.
+Open:
+	•	API docs: http://localhost:8000/docs
+	•	Health check: GET /health
 
-## Calidad y tests
-```bash
-pre-commit install
+
+2. Using Docker + MySQL
+
+cp .env.example .env
+# set DB_URL to:
+# mysql+pymysql://sync_kpis_user:sync_kpis_pass@db:3306/sync_kpis_db
+
+docker compose up -d --build
+
+---
+
+## Testing
+
 pytest -q
-```
 
-## Licencia
-MIT
+CI runs the same suite on each push/PR.
+
+---
+
+## Notes
+
+This project is intentionally small and focused.
+	•	It aims to demonstrate:
+	•	clean API design,
+	•	proper auth & multitenancy,
+	•	idempotent write patterns,
+	•	SQL-based reporting / KPIs,
+	•	modern Python tooling.
+
+Feel free to fork and adapt it for real-world backends or technical screenings.
