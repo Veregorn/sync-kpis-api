@@ -139,6 +139,60 @@ CI runs the same suite on each push/PR.
 
 ---
 
+## Example flow
+
+Below is a minimal end-to-end flow you can use to try the API.
+
+1. **Register**
+
+```bash
+curl -X POST http://localhost:8000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo@example.com","password":"ChangeMe123"}'
+```
+
+2. **Login**
+
+```bash
+TOKEN=$(
+  curl -sS -X POST http://localhost:8000/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"demo@example.com","password":"ChangeMe123"}' \
+  | python -c "import sys, json; print(json.load(sys.stdin)["access_token"])"
+)
+```
+
+3. **Create a shop**
+
+```bash
+SHOP_ID=$(
+  curl -sS -X POST http://localhost:8000/shops \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Demo Shop"}' \
+  | python -c "import sys, json; import json as j; data=j.load(sys.stdin); print(data["id"])"
+)
+```
+
+4. **Create a receipt(idempotent)**
+
+```bash
+curl -X POST http://localhost:8000/shops/$SHOP_ID/receipts \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: test-123" \
+  -d '{"lines":[{"sku":"COCA-500","qty":2,"unit_price":1.2}]}'
+```
+
+5. **Get KPIs**
+
+```bash
+curl -sS -X GET "http://localhost:8000/shops/$SHOP_ID/kpis" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
 ## Notes
 
 This project is intentionally small and focused.

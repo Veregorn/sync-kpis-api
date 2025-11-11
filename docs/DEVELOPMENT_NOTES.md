@@ -1,3 +1,11 @@
+## How to work on this project (dev notes)
+
+- Use Python 3.11+ and a virtualenv.
+- Install dev deps with `pip install -e ".[dev]"`.
+- Run `pytest -q` before pushing.
+- Use `pre-commit install` to auto-run formatting and linting.
+- CI (GitHub Actions) will run ruff + black --check + pytest on each push/PR.
+
 # TaskList — Tutorial paso a paso
 
 > Sigue este checklist en orden. Marca cada casilla al completar.
@@ -77,3 +85,22 @@
 - [ ] Alembic + migraciones + índices.
 - [ ] Rate limiting e idempotencia por tabla.
 - [ ] Admin mínimo (FastAPI Admin o portar a Django admin).
+
+## M5 — Optional extensions (if needed)
+
+These are **nice-to-have** features to showcase more “real-world” patterns if there is time or a specific interview requires it.
+
+- [ ] **Incremental sync endpoint**  
+      `GET /devices/sync?since=...` using `updated_at` fields on core tables (shops, products, receipts) to return only changed records. Useful to demonstrate offline/edge/device scenarios.
+
+- [ ] **Export KPIs as CSV/JSON**  
+      Add `GET /shops/{shop_id}/kpis/export?format=csv|json` built on top of the existing KPIs logic. Shows ability to provide reporting/integration endpoints.
+
+- [ ] **Alembic migrations & indexes**  
+      Basic Alembic setup + 1–2 sample migrations (e.g. indexes on `sku`, `shop_id`, `created_at`). Demonstrates understanding of schema evolution beyond `create_all()`.
+
+- [ ] **Rate limiting / safety patterns**  
+      Simple per-user/per-shop rate limit or protection for critical endpoints (auth, receipts). Even a lightweight in-memory or Redis-based example is enough to signal awareness.
+
+- [ ] **Minimal admin UI**  
+      Either a lightweight FastAPI-based admin or wiring to an existing tool. Only if needed to showcase manageability/operational view of the data.
